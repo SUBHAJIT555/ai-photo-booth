@@ -20,6 +20,14 @@ function App() {
       </Routes>
       
     </Router>
+    // <>
+    // <Home />
+    // <Instraction />
+    // <Capture />
+    // <SubmitOrRetake />
+    // <Avatar />
+    // <Preview />
+    // </>
   );
 }
 
