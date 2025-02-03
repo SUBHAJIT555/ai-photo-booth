@@ -1,28 +1,22 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Home from './assets/Component/Home';
-import Instraction from './assets/Component/Instraction';
-import Capture from './assets/Component/Capture';
-import SubmitOrRetake from './assets/Component/SubmitOrRetake';
-import Avatar from './assets/Component/Avatar';
-import Preview from './assets/Component/Preview';
+import { router } from "./routes/routes";
+import { RouterProvider } from "react-router-dom";
 
 function App() {
   return (
-    <Router>
-      <Routes>
-        <Route path="/home" element={<Home />} />
-        <Route path="/instruction" element={<Instraction />} />
-        <Route path="/capture" element={<Capture />} />
-        <Route path="/submitorretake" element={<SubmitOrRetake />} />
-        <Route path="/avatar" element={<Avatar />} />
-        <Route path="/preview" element={<Preview />} />
-      </Routes>
-      
-    </Router>
+    <RouterProvider router={router} />
+    // <Router>
+    //   <Routes>
+    //     <Route path="/home" element={<Home />} />
+    //     <Route path="/instruction" element={<Instruction />} />
+    //     <Route path="/capture" element={<Capture />} />
+    //     <Route path="/submitorretake" element={<SubmitOrRetake />} />
+    //     <Route path="/avatar" element={<Avatar />} />
+    //     <Route path="/preview" element={<Preview />} />
+    //   </Routes>
+    // </Router>
     // <>
     // <Home />
-    // <Instraction />
+    // <Instruction />
     // <Capture />
     // <SubmitOrRetake />
     // <Avatar />
