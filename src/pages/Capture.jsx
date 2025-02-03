@@ -4,54 +4,84 @@ import Logo from "../component/Logo";
 
 function Capture() {
   const videoRef = useRef(null);
-  const [videoStream, setVideoStream] = useState(null);
+  const [videoStream, setVideoStream] = useState();
+  const [columns, setColumns] = useState([]);
 
-  // Stop camera stream
-  const stopVideoStream = useCallback(() => {
-    if (videoRef.current?.srcObject) {
-      const stream = videoRef.current.srcObject;
-      stream.getTracks().forEach((track) => track.stop());
-      videoRef.current.srcObject = null;
-    }
-  }, []);
+  async function getDevices() {
+    const devices = await navigator.mediaDevices.enumerateDevices();
+    console.log(devices);
+    const cols = [];
+    devices.forEach((device) => {
+      if (device.kind === "videoinput") {
+        cols.push({
+          label: device.label,
+          deviceId: device.deviceId,
+        });
+      }
+    });
 
-  // Start camera stream
+    setColumns(cols);
+  }
+
   const startCamera = useCallback(async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: false,
+      });
+
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
+        setVideoStream(stream);
       }
+      console.log("Camera started");
     } catch (error) {
-      console.error("Camera access error:", error);
+      console.error("Error accessing the camera:", error);
     }
   }, []);
 
+  const stopVideo = useCallback(() => {
+    console.log("Stopping video");
+    if (videoStream) {
+      videoStream.getTracks().forEach((track) => {
+        if (track.readyState === "live") {
+          track.stop();
+        }
+      });
+    }
+  }, [videoStream]);
+
   useEffect(() => {
-    startCamera();
-    // Cleanup on unmount
-    return () => stopVideoStream();
-  }, [startCamera, stopVideoStream]);
+    console.log("Mounting");
+    getDevices();
+    // startCamera();
+
+    return () => {
+      stopVideo();
+    };
+  }, [stopVideo]);
 
   return (
     <div className="w-full h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-evenly flex-col">
       <Logo />
 
       <div>
-        <button
-          onClick={stopVideoStream}
-          className="text-zinc-200 bg-zinc-700 py-2 px-4 rounded-lg"
-        >
-          Stop Camera
-        </button>
+        {!videoStream && (
+          <button
+            onClick={startCamera}
+            className="text-zinc-200 bg-zinc-700 py-2 px-4 rounded-lg"
+          >
+            {columns.length > 0 ? "Start Camera" : "No Camera Found"}
+          </button>
+        )}
       </div>
 
       <video
         ref={videoRef}
-        className="w-1/2 h-1/2 bg-zinc-700 rounded-2xl"
+        className=" bg-black rounded-2xl"
         autoPlay
         muted
-        playsInline
+        style={{ width: "640px", height: "480px" }} // Set fixed width and height
       />
 
       <Link to="/submitorretake">
