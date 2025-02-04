@@ -5,7 +5,7 @@ import Capture from "../pages/Capture";
 import SubmitOrRetake from "../pages/SubmitOrRetake";
 import Avatar from "../pages/Avatar";
 import Preview from "../pages/Preview";
-import CaptureTest from "../pages/CaptureTest";
+// import CaptureTest from "../pages/CaptureTest";
 
 export const router = createBrowserRouter([
   {
@@ -19,10 +19,6 @@ export const router = createBrowserRouter([
   {
     path: "/capture",
     element: <Capture />,
-  },
-  {
-    path: "/capturetest",
-    element: <CaptureTest />,
   },
   {
     path: "/submitorretake",
