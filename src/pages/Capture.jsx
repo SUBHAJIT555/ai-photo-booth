@@ -4,10 +4,15 @@ import Logo from "../component/Logo";
 
 function Capture() {
   const videoRef = useRef(null);
+  const [countdown, setCountdown] = useState(null);
   const [videoStream, setVideoStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [columns, setColumns] = useState([]);
   const canvasRef = useRef(null);
+
+  // const changeCapturedImageValue = (value) => {
+  //   setCapturedImage(value);
+  // };
 
   async function getDevices() {
     const devices = await navigator.mediaDevices.enumerateDevices();
@@ -35,7 +40,6 @@ function Capture() {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
         setVideoStream(stream);
-        setCapturedImage(null); // Reset captured image when restarting camera
       }
       console.log("Camera started");
     } catch (error) {
@@ -55,33 +59,68 @@ function Capture() {
     }
   }, [videoStream]);
 
-  // Capture the current frame from the video
   const captureImage = () => {
-    if (
-      !videoRef.current ||
-      !videoRef.current.videoWidth ||
-      !canvasRef.current
-    ) {
-      console.error("Video not ready for capture.");
+    setCountdown(5);
+  };
+
+  useEffect(() => {
+    if (countdown === null) return;
+
+    if (countdown === 0) {
+      // Capture the image
+      if (videoRef.current && canvasRef.current) {
+        const context = canvasRef.current.getContext("2d");
+        context.drawImage(
+          videoRef.current,
+          0,
+          0,
+          canvasRef.current.width,
+          canvasRef.current.height
+        );
+        const image = canvasRef.current.toDataURL("image/png");
+        setCapturedImage(image);
+      }
+      setCountdown(null);
+      stopVideo();
       return;
     }
 
-    const canvas = canvasRef.current;
-    const context = canvas.getContext("2d");
+    const timer = setTimeout(() => {
+      setCountdown(countdown - 1);
+    }, 1000);
 
-    // Set canvas size and draw video frame
-    canvas.width = videoRef.current.videoWidth;
-    canvas.height = videoRef.current.videoHeight;
-    context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+    return () => {
+      clearTimeout(timer);
+    };
+  }, [countdown]);
 
-    // Convert canvas to image data URL
-    const photoDataUrl = canvas.toDataURL("image/png");
+  // Capture the current frame from the video
+  // const captureImage = () => {
+  //   if (
+  //     !videoRef.current ||
+  //     !videoRef.current.videoWidth ||
+  //     !canvasRef.current
+  //   ) {
+  //     console.error("Video not ready for capture.");
+  //     return;
+  //   }
 
-    setCapturedImage(photoDataUrl); // Store the captured image
+  //   const canvas = canvasRef.current;
+  //   const context = canvas.getContext("2d");
 
-    console.log("capturedImage", capturedImage);
-    stopVideo(); // Stop the video stream
-  };
+  //   // Set canvas size and draw video frame
+  //   canvas.width = videoRef.current.videoWidth;
+  //   canvas.height = videoRef.current.videoHeight;
+  //   context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+
+  //   // Convert canvas to image data URL
+  //   const photoDataUrl = canvas.toDataURL("image/png");
+
+  //   setCapturedImage(photoDataUrl); // Store the captured image
+
+  //   console.log("capturedImage", capturedImage);
+  //   stopVideo(); // Stop the video stream
+  // };
 
   useEffect(() => {
     console.log("Mounting");
@@ -102,13 +141,22 @@ function Capture() {
       {/* Video Stream Section */}
       {!capturedImage ? (
         <div className="flex flex-col items-center py-2">
-          <video
-            ref={videoRef}
-            className="bg-black rounded-2xl shadow-lg"
-            autoPlay
-            muted
-            style={{ width: "640px", height: "480px" }} // Set fixed width and height
-          />
+          <div className="relative">
+            <video
+              ref={videoRef}
+              className="bg-black rounded-2xl shadow-lg"
+              autoPlay
+              muted
+              style={{ width: "640px", height: "480px" }} // Set fixed width and height
+            />
+            {countdown && (
+              <div className="absolute rounded-2xl top-0 left-0 right-0 bottom-0 flex items-center justify-center  bg-black bg-opacity-50">
+                <p className="animate-ping text-white text-9xl font-bold">
+                  {countdown}
+                </p>
+              </div>
+            )}
+          </div>
           <div className="mt-8">
             {!videoStream ? (
               <button
@@ -136,7 +184,7 @@ function Capture() {
             src={capturedImage}
             alt="Captured"
             className="rounded-2xl border-4 border-white shadow-lg"
-            style={{ width: "640px", height: "480px", objectFit: "cover" }}
+            style={{ width: "640px", height: "480px" }}
           />
           <div className="mt-8 flex gap-4">
             <button
