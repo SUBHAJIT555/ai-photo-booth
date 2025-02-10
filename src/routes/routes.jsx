@@ -21,13 +21,14 @@ export const router = createBrowserRouter([
     element: <Capture />,
   },
   {
-    path: "/submitorretake",
-    element: <SubmitOrRetake />,
-  },
-  {
     path: "/avatar",
     element: <Avatar />,
   },
+  {
+    path: "/submitorretake",
+    element: <SubmitOrRetake />,
+  },
+
   {
     path: "/preview",
     element: <Preview />,

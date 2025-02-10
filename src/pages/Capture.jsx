@@ -1,14 +1,17 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
 import Logo from "../component/Logo";
+import { saveData } from "../utils/localStorageDB";
+import { useNavigate } from "react-router-dom";
 
 function Capture() {
   const videoRef = useRef(null);
+  const navigate = useNavigate();
   const [countdown, setCountdown] = useState(null);
   const [videoStream, setVideoStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
   const [columns, setColumns] = useState([]);
   const canvasRef = useRef(null);
+  const [loading, setLoading] = useState(false);
 
   // const changeCapturedImageValue = (value) => {
   //   setCapturedImage(value);
@@ -60,7 +63,13 @@ function Capture() {
   }, [videoStream]);
 
   const captureImage = () => {
+    setLoading(true);
     setCountdown(5);
+  };
+
+  const submitImage = () => {
+    saveData("capturedImage", capturedImage);
+    navigate("/avatar");
   };
 
   useEffect(() => {
@@ -80,6 +89,7 @@ function Capture() {
         const image = canvasRef.current.toDataURL("image/png");
         setCapturedImage(image);
       }
+      setLoading(false);
       setCountdown(null);
       stopVideo();
       return;
@@ -93,34 +103,6 @@ function Capture() {
       clearTimeout(timer);
     };
   }, [countdown]);
-
-  // Capture the current frame from the video
-  // const captureImage = () => {
-  //   if (
-  //     !videoRef.current ||
-  //     !videoRef.current.videoWidth ||
-  //     !canvasRef.current
-  //   ) {
-  //     console.error("Video not ready for capture.");
-  //     return;
-  //   }
-
-  //   const canvas = canvasRef.current;
-  //   const context = canvas.getContext("2d");
-
-  //   // Set canvas size and draw video frame
-  //   canvas.width = videoRef.current.videoWidth;
-  //   canvas.height = videoRef.current.videoHeight;
-  //   context.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
-
-  //   // Convert canvas to image data URL
-  //   const photoDataUrl = canvas.toDataURL("image/png");
-
-  //   setCapturedImage(photoDataUrl); // Store the captured image
-
-  //   console.log("capturedImage", capturedImage);
-  //   stopVideo(); // Stop the video stream
-  // };
 
   useEffect(() => {
     console.log("Mounting");
@@ -137,7 +119,6 @@ function Capture() {
 
       {/* Hidden canvas for capturing the image */}
       <canvas ref={canvasRef} style={{ display: "none" }} />
-
       {/* Video Stream Section */}
       {!capturedImage ? (
         <div className="flex flex-col items-center py-2">
@@ -169,6 +150,7 @@ function Capture() {
               </button>
             ) : (
               <button
+                disabled={loading}
                 onClick={captureImage}
                 className="capitalize text-zinc-200 tracking-tight font-light bg-zinc-700 py-3 px-5 rounded-full border-2 border-transparent hover:bg-zinc-900 hover:border-zinc-200"
               >
@@ -196,11 +178,13 @@ function Capture() {
             >
               Retake
             </button>
-            <Link to="/submitorretake">
-              <button className="capitalize text-zinc-200 tracking-tight font-light bg-zinc-700 py-2 px-5 rounded-full border-2 border-transparent hover:bg-zinc-900 hover:border-zinc-200">
-                Submit
-              </button>
-            </Link>
+
+            <button
+              onClick={submitImage}
+              className="capitalize text-zinc-200 tracking-tight font-light bg-zinc-700 py-2 px-5 rounded-full border-2 border-transparent hover:bg-zinc-900 hover:border-zinc-200"
+            >
+              Submit
+            </button>
           </div>
         </div>
       )}

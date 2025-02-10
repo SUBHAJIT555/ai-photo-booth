@@ -1,9 +1,13 @@
 import { router } from "./routes/routes";
 import { RouterProvider } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
-    <RouterProvider router={router} />
+    <>
+      <RouterProvider router={router} />
+      <Toaster />
+    </>
     // <Router>
     //   <Routes>
     //     <Route path="/home" element={<Home />} />
