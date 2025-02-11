@@ -53,6 +53,7 @@ function Avatar() {
   // Handle swap button click
   const handleSwap = async () => {
     try {
+      setLoading(true);
       if (selectedImage) {
         const targetBase64 = await convertToBase64(selectedImage);
         // setBase64Image(base64);
@@ -76,11 +77,11 @@ function Avatar() {
         // const data = await axios.get(
         //   "https://jsonplaceholder.typicode.com/todos"
         // );
-
+        console.log(data.data);
         if (data?.data?.result_url) {
-          navigate(`/preview?resultUrl=${data.result_url}`, {
+          navigate(`/preview?resultUrl=${data.data.result_url}`, {
             state: {
-              resultUrl: data.result_url,
+              resultUrl: data.data.result_url,
             },
           });
         }
@@ -126,18 +127,26 @@ function Avatar() {
             <div
               key={index}
               className={cn(
-                "w-full h-96 md:h-[450px] bg-red-200 rounded-xl overflow-hidden relative cursor-pointer",
+                "group relative  w-full max-w-[400px] mx-auto bg-red-200 rounded-xl overflow-hidden  cursor-pointer",
                 avatar === selectedImage ? "border-2 border-zinc-200" : ""
               )}
               onClick={() => setSelectedImage(avatar)}
             >
-              <div className="h-[75%] w-full">
+              <div className="h-[85%] w-full overflow-hidden rounded-t-xl bg-gray-200">
+                <img
+                  src={avatar}
+                  alt={`Avatar ${index + 1}`}
+                  className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              </div>
+
+              {/* <div className="h-[75%] w-full">
                 <img
                   src={avatar}
                   alt={`Avatar ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
-              </div>
+              </div>  */}
               <Label />
             </div>
           )
@@ -148,10 +157,10 @@ function Avatar() {
 
       <button
         onClick={handleSwap}
-        disabled={!selectedImage}
+        disabled={!selectedImage || loading}
         className={cn(
           "capitalize text-zinc-200 tracking-tight font-light py-2 px-5 rounded-full border-2 border-transparent",
-          selectedImage
+          selectedImage || loading
             ? "bg-zinc-700 hover:bg-zinc-900 hover:border-zinc-200"
             : "bg-zinc-500 cursor-not-allowed"
         )}
