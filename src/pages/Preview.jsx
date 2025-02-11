@@ -1,5 +1,4 @@
 import Logo from "../component/Logo";
-
 import {
   IoDownloadSharp,
   IoHome,
@@ -12,19 +11,13 @@ import { saveAs } from "file-saver";
 // import toast from "react-hot-toast";
 import QRModal from "../component/QRModal";
 import { useState } from "react";
-import { getData } from "../utils/localStorageDB";
 import { PDFDocument } from "pdf-lib";
 import download from "downloadjs";
 // import download from "downloadjs";
 
 function Preview() {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
-  const { resultUrl } = useLocation()?.state || {
-      resultUrl: getData("capturedImage"),
-    } || {
-      resultUrl:
-        "https://worker-images-5.ws.pho.to/i2/1280e25733859486057e182c8ae1b9a91ae3a464_result.jpeg?",
-    };
+  const { resultUrl } = useLocation()?.state || {};
 
   // Function for unique filename
   const generateUniqueFilename = (extensions) => {

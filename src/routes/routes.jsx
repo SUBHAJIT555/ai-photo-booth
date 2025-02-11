@@ -2,9 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import Instruction from "../pages/Instraction";
 import Capture from "../pages/Capture";
-import SubmitOrRetake from "../pages/SubmitOrRetake";
 import Avatar from "../pages/Avatar";
 import Preview from "../pages/Preview";
+import ErrorPage from "../pages/ErrorPage";
 // import CaptureTest from "../pages/CaptureTest";
 
 export const router = createBrowserRouter([
@@ -24,13 +24,16 @@ export const router = createBrowserRouter([
     path: "/avatar",
     element: <Avatar />,
   },
-  {
-    path: "/submitorretake",
-    element: <SubmitOrRetake />,
-  },
-
+  // {
+  //   path: "/submitorretake",
+  //   element: <SubmitOrRetake />,
+  // },
   {
     path: "/preview",
     element: <Preview />,
+  },
+  {
+    path: "*",
+    element: <ErrorPage />,
   },
 ]);
