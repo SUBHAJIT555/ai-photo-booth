@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Logo from "../component/Logo";
 import { saveData } from "../utils/localStorageDB";
 import { useNavigate } from "react-router-dom";
+import { cn } from "../utils/cn";
 
 function Capture() {
   const videoRef = useRef(null);
@@ -152,9 +153,12 @@ function Capture() {
               <button
                 disabled={loading}
                 onClick={captureImage}
-                className="capitalize text-zinc-200 tracking-tight font-light bg-zinc-700 py-3 px-5 rounded-full border-2 border-transparent hover:bg-zinc-900 hover:border-zinc-200"
+                className={cn(
+                  "capitalize text-zinc-200 tracking-tight font-light bg-zinc-700 py-3 px-5 rounded-full border-2 border-transparent hover:bg-zinc-900 hover:border-zinc-200",
+                  loading && "opacity-50 cursor-not-allowed"
+                )}
               >
-                Click here to capture
+                {loading ? "Capturing..." : "Click here to capture"}
               </button>
             )}
           </div>

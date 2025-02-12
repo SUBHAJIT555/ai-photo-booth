@@ -6,6 +6,7 @@ import { cn } from "../utils/cn";
 import { getData } from "../utils/localStorageDB";
 import toast from "react-hot-toast";
 import useAxiosPublic from "../hooks/useAxios";
+import { FaSpinner } from "react-icons/fa";
 
 // Dynamically import all avatars
 const maleAvatars = import.meta.glob("../assets/Avatars/male-*.png", {
@@ -162,10 +163,17 @@ function Avatar() {
           "capitalize text-zinc-200 tracking-tight font-light py-2 px-5 rounded-full border-2 border-transparent",
           selectedImage || loading
             ? "bg-zinc-700 hover:bg-zinc-900 hover:border-zinc-200"
-            : "bg-zinc-500 cursor-not-allowed"
+            : "bg-zinc-500 cursor-not-allowed",
+          loading && "opacity-50 cursor-not-allowed"
         )}
       >
-        Swap
+        {loading ? (
+          <span>
+            <FaSpinner className="animate-spin" />
+          </span>
+        ) : (
+          <span>Swap</span>
+        )}
       </button>
     </div>
   );

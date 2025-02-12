@@ -5,7 +5,7 @@ import {
   IoPrintSharp,
   IoQrCode,
 } from "react-icons/io5";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useSearchParams } from "react-router-dom";
 import Label from "../component/Label";
 import { saveAs } from "file-saver";
 // import toast from "react-hot-toast";
@@ -13,11 +13,15 @@ import QRModal from "../component/QRModal";
 import { useState } from "react";
 import { PDFDocument } from "pdf-lib";
 import download from "downloadjs";
-// import download from "downloadjs";
 
 function Preview() {
   const [isQRModalOpen, setIsQRModalOpen] = useState(false);
   const { resultUrl } = useLocation()?.state || {};
+  const [searchParams] = useSearchParams();
+
+  const url = searchParams.get("resultUrl");
+
+  const finalUrl = resultUrl || url;
 
   // Function for unique filename
   const generateUniqueFilename = (extensions) => {
@@ -27,7 +31,7 @@ function Preview() {
 
   // handle download button click
   const handleDownload = () => {
-    saveAs(resultUrl, generateUniqueFilename("png"));
+    saveAs(finalUrl, generateUniqueFilename("png"));
   };
 
   // Helper function to convert Uint8Array to Base64
@@ -43,7 +47,7 @@ function Preview() {
   const printImageAsPDF = async () => {
     try {
       // Fetch the image as a Blob
-      const response = await fetch(resultUrl);
+      const response = await fetch(finalUrl);
       const imageBlob = await response.blob();
       const imageArrayBuffer = await imageBlob.arrayBuffer();
 
@@ -109,10 +113,10 @@ function Preview() {
       <Logo />
       <div className="group mx-auto w-full bg-red-200 rounded-xl overflow-hidden max-w-[400px]">
         <Label />
-        {resultUrl && (
-          <div className="h-[85%] w-full overflow-hidden rounded-t-xl">
+        {finalUrl && (
+          <div className="h-[85%] w-full overflow-hidden">
             <img
-              src={resultUrl}
+              src={finalUrl}
               alt="Generated result"
               className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
@@ -158,7 +162,7 @@ function Preview() {
       <QRModal
         isOpen={isQRModalOpen}
         onClose={() => setIsQRModalOpen(false)}
-        data={resultUrl}
+        data={finalUrl}
       />
     </div>
   );

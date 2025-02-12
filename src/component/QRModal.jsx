@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import QRCode from "react-qr-code";
+import { QRCodeSVG } from "qrcode.react";
 import PropTypes from "prop-types";
+import { IoMdClose } from "react-icons/io";
 
 const QRModal = ({ isOpen, onClose, data }) => {
   useEffect(() => {
@@ -34,24 +35,26 @@ const QRModal = ({ isOpen, onClose, data }) => {
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-500"
         >
-          <svg
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
+          <IoMdClose />
         </button>
 
         <div className="mt-2">
           <div className="flex flex-col items-center space-y-4">
-            <QRCode value={data} />
+            {/*  */}
+            <QRCodeSVG
+              size={200}
+              value={data}
+              // fgColor="#3862AB"
+              imageSettings={{
+                src: "https://codecobble.netlify.app/assets/img/Code%20Cobble-04.png",
+                x: undefined,
+                y: undefined,
+                height: 24,
+                width: 24,
+                opacity: 1,
+                excavate: true,
+              }}
+            />
           </div>
         </div>
       </div>
