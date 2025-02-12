@@ -74,11 +74,7 @@ function Avatar() {
 
         // Send data to backend
         const data = await publicAxios.post("faceswap_handler.php", formData);
-        // const data = await response.json();
-        // const data = await axios.get(
-        //   "https://jsonplaceholder.typicode.com/todos"
-        // );
-        console.log(data.data);
+
         if (data?.data?.result_url) {
           navigate(`/preview?resultUrl=${data.data.result_url}`, {
             state: {
@@ -97,8 +93,6 @@ function Avatar() {
   return (
     <div className="w-full min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center flex-col py-10 gap-10">
       <Logo />
-
-      {loading && <div className="animate-spin">Loading....</div>}
 
       {/* Gender Toggle */}
       <div className="inline-flex items-center gap-2">
@@ -141,13 +135,6 @@ function Avatar() {
                 />
               </div>
 
-              {/* <div className="h-[75%] w-full">
-                <img
-                  src={avatar}
-                  alt={`Avatar ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
-              </div>  */}
               <Label />
             </div>
           )

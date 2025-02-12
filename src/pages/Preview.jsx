@@ -75,8 +75,8 @@ function Preview() {
       download(pdfBytes, generateUniqueFilename("pdf"));
 
       // Send the PDF to PrintNode
-      const apiKey = "YOUR_PRINTNODE_API_KEY"; // Replace with actual API key
-      const printerId = "YOUR_PRINTER_ID"; // Replace with actual printer ID
+      const apiKey = import.meta.env.VITE_PRINTNODE_API_KEY; // Replace with actual API key
+      const printerId = import.meta.env.VITE_PRINTNODE_PRINTER_ID; // Replace with actual printer ID
 
       const printJob = {
         printerId: printerId,
