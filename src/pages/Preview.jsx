@@ -152,7 +152,7 @@ function Preview() {
         >
           <IoQrCode className="text-xl md:text-3xl" />
         </button>
-        <Link to="/home">
+        <Link to="/">
           <button className="border-[2px] border-zinc-300 p-2 rounded-lg hover:bg-zinc-800 bg-zinc-700">
             <IoHome className="text-xl md:text-3xl" />
           </button>
